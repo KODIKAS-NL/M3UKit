@@ -61,7 +61,7 @@ public final class PlaylistParser {
   /// - Returns: playlist.
   public func parse(_ input: PlaylistSource) throws -> Playlist {
     let rawString = try extractRawString(from: input)
-
+    let urlTvg = urlTvgRegex.firstMatch(in: rawString)
     var medias: [Playlist.Media] = []
 
     var lastMetadataLine: String?
@@ -103,7 +103,7 @@ public final class PlaylistParser {
       throw error
     }
 
-    return Playlist(medias: medias)
+    return Playlist(medias: medias, urlTvg: urlTvg)
   }
 
   /// Walk over a playlist and return its medias one-by-one.
@@ -325,6 +325,8 @@ public final class PlaylistParser {
 
   // MARK: - Regex
 
+  internal let urlTvgRegex: RegularExpression = #"url-tvg="(.?|.+?)""#
+    
   internal let durationRegex: RegularExpression = #"#EXTINF:\s*(\-*\d+)"#
   internal let nameRegex: RegularExpression = #".*,(.+?)$"#
 

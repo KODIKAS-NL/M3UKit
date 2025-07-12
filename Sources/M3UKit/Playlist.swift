@@ -25,150 +25,150 @@ import Foundation
 
 /// Object representing a playlist containing media items.
 public struct Playlist: Equatable, Hashable, Codable {
+    public var urlTvg: String?
+    /// Object representing a media.
+    public struct Media: Equatable, Hashable, Codable {
+        /// Object representing attributes for a media.
+        public struct Attributes: Equatable, Hashable, Codable {
+            /// Create a new attributes object.
+            /// - Parameters:
+            ///   - id: id.
+            ///   - name: name.
+            ///   - country: country.
+            ///   - language: language.
+            ///   - logo: logo.
+            ///   - channelNumber: channel number.
+            ///   - shift: shift.
+            ///   - groupTitle: group title.
+            ///   - seasonNumber: Season number (for TV shows).
+            ///   - episodeNumber: Episode number (for TV shows).
+            public init(
+                id: String? = nil,
+                name: String? = nil,
+                country: String? = nil,
+                language: String? = nil,
+                logo: String? = nil,
+                channelNumber: String? = nil,
+                shift: String? = nil,
+                groupTitle: String? = nil,
+                seasonNumber: Int? = nil,
+                episodeNumber: Int? = nil
+            ) {
+                self.id = id
+                self.name = name
+                self.country = country
+                self.language = language
+                self.logo = logo
+                self.channelNumber = channelNumber
+                self.shift = shift
+                self.groupTitle = groupTitle
+                self.seasonNumber = seasonNumber
+                self.episodeNumber = episodeNumber
+            }
 
-  /// Object representing a media.
-  public struct Media: Equatable, Hashable, Codable {
+            /// tvg-id.
+            public var id: String?
 
-    /// Object representing attributes for a media.
-    public struct Attributes: Equatable, Hashable, Codable {
-      /// Create a new attributes object.
-      /// - Parameters:
-      ///   - id: id.
-      ///   - name: name.
-      ///   - country: country.
-      ///   - language: language.
-      ///   - logo: logo.
-      ///   - channelNumber: channel number.
-      ///   - shift: shift.
-      ///   - groupTitle: group title.
-      ///   - seasonNumber: Season number (for TV shows).
-      ///   - episodeNumber: Episode number (for TV shows).
-      public init(
-        id: String? = nil,
-        name: String? = nil,
-        country: String? = nil,
-        language: String? = nil,
-        logo: String? = nil,
-        channelNumber: String? = nil,
-        shift: String? = nil,
-        groupTitle: String? = nil,
-        seasonNumber: Int? = nil,
-        episodeNumber: Int? = nil
-      ) {
-        self.id = id
-        self.name = name
-        self.country = country
-        self.language = language
-        self.logo = logo
-        self.channelNumber = channelNumber
-        self.shift = shift
-        self.groupTitle = groupTitle
-        self.seasonNumber = seasonNumber
-        self.episodeNumber = episodeNumber
-      }
+            /// tvg-name.
+            public var name: String?
 
-      /// tvg-id.
-      public var id: String?
+            /// tvg-country.
+            public var country: String?
 
-      /// tvg-name.
-      public var name: String?
+            /// tvg-language.
+            public var language: String?
 
-      /// tvg-country.
-      public var country: String?
+            /// tvg-logo.
+            public var logo: String?
 
-      /// tvg-language.
-      public var language: String?
+            /// tvg-chno.
+            public var channelNumber: String?
 
-      /// tvg-logo.
-      public var logo: String?
+            /// tvg-shift.
+            public var shift: String?
 
-      /// tvg-chno.
-      public var channelNumber: String?
+            /// group-title.
+            public var groupTitle: String?
 
-      /// tvg-shift.
-      public var shift: String?
+            /// Season number (for TV shows).
+            public var seasonNumber: Int?
 
-      /// group-title.
-      public var groupTitle: String?
+            /// Episode number (for TV shows).
+            public var episodeNumber: Int?
+        }
 
-      /// Season number (for TV shows).
-      public var seasonNumber: Int?
+        /// Enum representing media kind.
+        public enum Kind: String, Equatable, Hashable, Codable {
+            case movie
+            case series
+            case live
+            case unknown
+        }
 
-      /// Episode number (for TV shows).
-      public var episodeNumber: Int?
+        typealias Metadata = (
+            duration: Int,
+            attributes: Attributes,
+            name: String
+        )
+
+        init(
+            metadata: Metadata,
+            kind: Kind,
+            url: URL
+        ) {
+            self.init(
+                duration: metadata.duration,
+                attributes: metadata.attributes,
+                kind: kind,
+                name: metadata.name,
+                url: url
+            )
+        }
+
+        /// Create a new media object.
+        /// - Parameters:
+        ///   - duration: duration.
+        ///   - attributes: attributes.
+        ///   - kind: kind.
+        ///   - name: name.
+        ///   - url: url.
+        public init(
+            duration: Int,
+            attributes: Attributes,
+            kind: Kind,
+            name: String,
+            url: URL
+        ) {
+            self.duration = duration
+            self.attributes = attributes
+            self.kind = kind
+            self.name = name
+            self.url = url
+        }
+
+        /// Duration, Usually -1 for live stream content.
+        public var duration: Int
+
+        /// Attributes.
+        public var attributes: Attributes
+
+        /// Kind.
+        public var kind: Kind
+
+        /// Media name.
+        public var name: String
+
+        /// Media URL.
+        public var url: URL
     }
 
-    /// Enum representing media kind.
-    public enum Kind: String, Equatable, Hashable, Codable {
-      case movie
-      case series
-      case live
-      case unknown
+    /// Create a playlist.
+    /// - Parameter medias: medias.
+    public init(medias: [Media], urlTvg: String? = nil) {
+        self.medias = medias
+        self.urlTvg = urlTvg
     }
 
-    internal typealias Metadata = (
-      duration: Int,
-      attributes: Attributes,
-      name: String
-    )
-
-    internal init(
-      metadata: Metadata,
-      kind: Kind,
-      url: URL
-    ) {
-      self.init(
-        duration: metadata.duration,
-        attributes: metadata.attributes,
-        kind: kind,
-        name: metadata.name,
-        url: url
-      )
-    }
-
-    /// Create a new media object.
-    /// - Parameters:
-    ///   - duration: duration.
-    ///   - attributes: attributes.
-    ///   - kind: kind.
-    ///   - name: name.
-    ///   - url: url.
-    public init(
-      duration: Int,
-      attributes: Attributes,
-      kind: Kind,
-      name: String,
-      url: URL
-    ) {
-      self.duration = duration
-      self.attributes = attributes
-      self.kind = kind
-      self.name = name
-      self.url = url
-    }
-
-    /// Duration, Usually -1 for live stream content.
-    public var duration: Int
-
-    /// Attributes.
-    public var attributes: Attributes
-
-    /// Kind.
-    public var kind: Kind
-
-    /// Media name.
-    public var name: String
-
-    /// Media URL.
-    public var url: URL
-  }
-
-  /// Create a playlist.
-  /// - Parameter medias: medias.
-  public init(medias: [Media]) {
-    self.medias = medias
-  }
-
-  /// Medias.
-  public var medias: [Media]
+    /// Medias.
+    public var medias: [Media]
 }

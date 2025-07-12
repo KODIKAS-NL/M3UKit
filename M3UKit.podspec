@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = 'M3UKit'
-    s.version = '0.8.1'
+    s.version = '0.8.2'
     s.summary = 'Modern framework for parsing m3u files'
     s.description = <<-DESC
     A modern framework for parsing m3u files.
